@@ -43,6 +43,9 @@ target_link_libraries (TestTwoDProblem course_library Eigen3::Eigen)
 add_executable(TestThreeDProblem TestThreeDProblem.cpp)
 target_link_libraries (TestThreeDProblem course_library Eigen3::Eigen)
 
+add_executable(Example1 Example1.cpp)
+target_link_libraries (Example1 course_library Eigen3::Eigen)
+
 # Mac OS X specific code
 if (APPLE)
   target_compile_definitions(TestTwoDProblem PRIVATE MACOSX)

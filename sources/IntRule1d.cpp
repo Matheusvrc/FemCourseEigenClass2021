@@ -20,16 +20,32 @@ IntRule1d::IntRule1d(){
 }
 
 IntRule1d::IntRule1d(int order) : IntRule(order) {
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+    SetOrder(order);
 }
-
+static int ComputingSymmetricCubatureRule(int order, MatrixDouble &Points, VecDouble &Weights);
 void IntRule1d::SetOrder(int order) {
     fOrder = order;
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+   if (order < 0 || order > MaxOrder()) {
+        DebugStop();
+    }
+
+    /*A0*f(x0)+A1*f(x1)
+    fWeights são as constantes A0 e A1
+    fPoints são os pontos médios de aproximação - {[3^(1/2)/3];-[3^(1/2)/3]} == {0.57735026919;-0.57735026919}
+    */
+    int npoints=(order+1)/2; //ordem = 2*npoints - 1
+    fPoints.resize(npoints,1); //coordenadas dos pontos de integração
+    fWeights.resize(npoints); //A0 e A1
+
+    VecDouble coordAux(npoints); //vecdouble é um vetor de números reais (linha,coluna)
+    gauleg(-1,1,coordAux,fWeights);
+
+    for (int i=0; i<npoints;i++){
+        fPoints(i,0)=coordAux[i];
+    }
 }
 
+//co = coordenada ; w = peso (A0, A1 ...) ; x1 e x2 são os qsi's -1 e 1;
 void IntRule1d::gauleg(const double x1, const double x2, VecDouble &co, VecDouble &w){
     int n = w.size();
 

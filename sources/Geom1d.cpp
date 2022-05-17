@@ -21,18 +21,45 @@ Geom1d& Geom1d::operator=(const Geom1d& copy) {
 }
 
 void Geom1d::Shape(const VecDouble &xi, VecDouble &phi, MatrixDouble &dphi) {
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+    
+    /*funcoes de forma
+    xi é o qsi (valor do ponto)
+    "fi" é a funcao chapeu - precisamos de expressões para essas equações
+    fi(0)=(1-xi)/2 e fi(1)=(1+xi)/2
+    */
+
+   if (phi.size() != 2) DebugStop();
+
+    phi[0] = (1 - xi[0]) / 2.;
+    phi[1] = (1 + xi[0]) / 2.;
+
+    dphi(0,0) = -0.5;
+    dphi(1,0) = 0.5;
+
 }
 
 void Geom1d::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x) {
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+    
+    VecDouble phi(2);
+    MatrixDouble dphi (2,1);
+    Shape(xi,phi,dphi);
+
+    x[0] = NodeCo(0,0) * phi[0] + NodeCo(0,1) + phi[1];
+
+    //coordenadas
 }
 
 void Geom1d::GradX(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x, MatrixDouble &gradx) {
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+    
+   VecDouble phi(2);
+    MatrixDouble dphi (2,1);
+    Shape(xi,phi,dphi);
+
+    x[0] = NodeCo(0,0) * phi[0] + NodeCo(0,1) + phi[1];     
+
+    gradx(0,0) = NodeCo(0,0) * dphi(0,0);
+    gradx(0,1) = NodeCo(0,1) * dphi(1,0);
+
 }
 
 void Geom1d::SetNodes(const VecInt &nodes) {
