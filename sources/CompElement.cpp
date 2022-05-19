@@ -199,6 +199,7 @@ void CompElement::CalcStiff(MatrixDouble &ek, MatrixDouble &ef) const {
         material->Contribute(data, weight, ek, ef);
     }
 
+    // std::cout << "Matriz de rigidez = " << EK << std::endl;
     //+++++++++++++++++
     
 }

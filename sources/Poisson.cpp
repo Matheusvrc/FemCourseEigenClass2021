@@ -133,12 +133,26 @@ void Poisson::Contribute(IntPointData &data, double weight, MatrixDouble &EK, Ma
         force(data.x, resloc);
         res = resloc[0];
     }
+    /* Opção 1
+    EK += dphi * dphi * weight;
+    */
 
-    //+++++++++++++++++
+    /* Opção 2
+
+    for (int i = 0, i<nShape; i++){
+        for (int j=0; j < nShape; j++){
+            EK(i,j) += dphi(i,0) * dphi(j,0) * weight;
+        }
+    }
+    */
+    
+    /*
+    +++++++++++++++++
     // Please implement me
     std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
     DebugStop();
     //+++++++++++++++++
+    */
 }
 
 void Poisson::PostProcessSolution(const IntPointData &data, const int var, VecDouble &Solout) const {

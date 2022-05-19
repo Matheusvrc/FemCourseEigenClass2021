@@ -15,31 +15,29 @@ void Shape1d::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, MatrixD
     if (orders[0] < 0 || orders[1] < 0 || orders[2] < 0) {
         std::cout << "Shape1d::Shape: Invalid dimension for arguments: order\n";
         DebugStop();
-    }
+        }
     if (orders[0] > 1 || orders[1] > 1) {
         std::cout << "Shape1d::Shape: Invalid dimension for arguments: order\n";
         DebugStop();
-    }
+        }
     if (orders[2] > 2) {
-        std::cout << "Shape1d::Shape: Please implement it for order > 2\n";
-        DebugStop();
-    }
-    
-    auto nshape = NShapeFunctions(orders);
-    phi.resize(nshape);
-    dphi.resize(1,nshape);
+      
+        auto nshape = NShapeFunctions(orders);
+        phi.resize(nshape);
+        dphi.resize(1,nshape);
         
-    phi[0] = (1 - xi[0]) / 2.;
-    phi[1] = (1 + xi[0]) / 2.;
-
-    dphi(0,0) = -0.5;
-    dphi(0,1) = 0.5;
-
-    if(nshape>2){
-        DebugStop();
+        phi[0] = (1 - xi[0]) / 2.;
+        phi[1] = (1 + xi[0]) / 2.;
+        
+        dphi(0,0) = -0.5;
+        dphi(0,1) = 0.5;
+        
+        /*std::cout << "Shape1d::Shape: Please implement it for order > 2\n";
+        DebugStop();*/
+        }
+    
+    
     }
-
-}
 
 /// returns the number of shape functions associated with a side
 int Shape1d::NShapeFunctions(int side, int order){

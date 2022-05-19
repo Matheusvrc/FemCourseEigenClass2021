@@ -5,22 +5,97 @@
  */
 
 ///\cond
-#include <iostream> 
+#include <iostream>
+#include <stdio.h>
 ///\endcond
 #include "IntRule1d.h"
 #include "IntRuleQuad.h"
+
 
 IntRuleQuad::IntRuleQuad(){
 }
 
 IntRuleQuad::IntRuleQuad(int order) {
+    SetOrder(order); //adicionei
+    
+    /*
     std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
     DebugStop();
+    */
 }
 
+static int ComputingSymmetricCubatureRule(int order, MatrixDouble &Points, VecDouble &Weights); //adicionei
+/*
+void IntRule1d::SetOrder(int order) {
+    fOrder = order;
+   if (order < 0 || order > MaxOrder()) {
+        DebugStop();
+    }
+    */
+
 void IntRuleQuad::SetOrder(int order) {
+    
+    int npoints=(order+1)/2; //ordem = 2*npoints - 1
+    fPoints.resize(npoints,1); //coordenadas dos pontos de integração
+    fWeights.resize(npoints); //A0 e A1
+    
+    //adicionei o comando switch
+    switch (order){
+        case 2:
+            
+            //fPoints[]{0.5773502692, -0.5773502692}; inicialização uniforme
+
+            fPoints[0]=0.5773502692;
+            fPoints[1]=-0.5773502692;
+
+            fWeights[0]=1.;
+            fWeights[1]=1.;
+            break;
+        
+        case 3:
+            fPoints[0]=0.7745966692;
+            fPoints[1]=0.;
+            fPoints[2]=-0.7745966692;
+
+            fWeights[0]=0.5555555556;
+            fWeights[1]=0.8888888889;
+            fWeights[2]=0.5555555556;
+            break;
+            
+        case 4:
+            fPoints[0]=0.8611363116;
+            fPoints[1]=0.3399810436;
+            fPoints[2]=-0.3399810436;
+            fPoints[3]=-0.8611363116;
+
+            fWeights[0]=0.3478548451;
+            fWeights[1]=0.6521451549;
+            fWeights[2]=0.6521451549;
+            fWeights[3]=0.3478548451;
+            break;
+
+        case 5:
+            fPoints[0]=0.9061798459;
+            fPoints[1]=0.5384693101;
+            fPoints[2]=0.;
+            fPoints[3]=-0.5384693101;
+            fPoints[4]=-0.9061798459;
+
+            fWeights[0]=0.2369268850;
+            fWeights[1]=0.4786286705;
+            fWeights[2]=0.5688888889;
+            fWeights[3]=0.4786286705;
+            fWeights[4]=0.2369268850;
+            break;
+
+        default:
+        std::cout << "\nErro: Ordem superior ao limite programado\n";
+    }
+
+    /*
     std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
     DebugStop();
+    */
 }
 
 void IntRuleQuad::gaulegQuad(const double x1, const double x2, VecDouble &co, VecDouble &w) {

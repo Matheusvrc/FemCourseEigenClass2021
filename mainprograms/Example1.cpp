@@ -37,19 +37,16 @@ int main() {
 
         for (int iEl = 0; iEl < nElements; iEl++) {
 
-       VecDouble coord(3);
-       coord[0] = deltaX*(iEl+1); //(multiplica o tamanho de cada elemento pela coordenada inicial)
-       coord[1] = deltaY*(iEl+1); //(y)
-       gmesh->Node(iEl+1).SetCo(coord);
+            coord[0] = deltaX*(iEl+1); //(multiplica o tamanho de cada elemento pela coordenada inicial)
+            coord[1] = deltaY*(iEl+1); //(y)
+            gmesh->Node(iEl+1).SetCo(coord);
 
-       VecInt nodes(2);
-       nodes[0] = iEl;
-       nodes[1] = iEl + 1;
-       GeoElement *gel = new GeoElementTemplate<Geom1d>(nodes, matid, gmesh, iEl);
-       gmesh->SetElement(iEl, gel);
-
-
-        }
+            VecInt nodes(2);
+            nodes[0] = iEl;
+            nodes[1] = iEl + 1;
+            GeoElement *gel = new GeoElementTemplate<Geom1d>(nodes, matid, gmesh, iEl);
+            gmesh->SetElement(iEl, gel);
+           }
 
        gmesh->BuildConnectivity();
        gmesh->Print(cout);
@@ -61,7 +58,7 @@ int main() {
         CompMesh cmesh(gmesh); 
 
         //Estabelece um tipo de material
-        MatrixDouble perm(1,1); 
+        MatrixDouble perm(1,1); //matriz 2x2
         perm(0,0)=1.;
         Poisson *mat = new Poisson(matid,perm); //perm é a cte 'k' na fórmula (permeabilidade)
         int a=1;
