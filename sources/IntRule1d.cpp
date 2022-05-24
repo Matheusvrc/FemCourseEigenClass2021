@@ -33,7 +33,7 @@ void IntRule1d::SetOrder(int order) {
     fWeights são as constantes A0 e A1
     fPoints são os pontos médios de aproximação - {[3^(1/2)/3];-[3^(1/2)/3]} == {0.57735026919;-0.57735026919}
     */
-    int npoints=(order+1)/2; //ordem = 2*npoints - 1
+    int npoints=(2*order-1); //ordem = 2*npoints - 1
     fPoints.resize(npoints,1); //coordenadas dos pontos de integração
     fWeights.resize(npoints); //A0 e A1
 

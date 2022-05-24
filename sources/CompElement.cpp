@@ -187,6 +187,7 @@ void CompElement::CalcStiff(MatrixDouble &ek, MatrixDouble &ef) const {
     double weight = 0.;
 
     IntRule *intrule = this->GetIntRule();
+    intrule->SetOrder(2);
     int intrulepoints = intrule->NPoints();
 
     for(int int_ind = 0; int_ind < intrulepoints; ++int_ind){ 
@@ -199,7 +200,7 @@ void CompElement::CalcStiff(MatrixDouble &ek, MatrixDouble &ef) const {
         material->Contribute(data, weight, ek, ef);
     }
 
-    // std::cout << "Matriz de rigidez = " << EK << std::endl;
+    //std::cout << "Matriz de rigidez = " << EK << std::endl;
     //+++++++++++++++++
     
 }

@@ -67,9 +67,19 @@ void Assemble::Compute(SparseMat &globmat, MatrixDouble &rhs) {
 
         cel->CalcStiff(ek, ef);
         
+        //Como determinar os valores nos vetores e nas matrizes?
+        /*
+        for (int i=0; i<nshape; i++){
+            for(int j=0; j<nshape; j++){
+                ek(i,j)=EK(i,j);
+            }
+        */  
+        }
+        
         //+++++++++++++++++
         std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
         DebugStop();
         //+++++++++++++++++
-    }
-}
+} 
+    
+

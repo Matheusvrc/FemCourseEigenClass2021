@@ -20,24 +20,43 @@ void Shape1d::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, MatrixD
         std::cout << "Shape1d::Shape: Invalid dimension for arguments: order\n";
         DebugStop();
         }
-    if (orders[2] > 2) {
-      
+
         auto nshape = NShapeFunctions(orders);
         phi.resize(nshape);
         dphi.resize(1,nshape);
         
-        phi[0] = (1 - xi[0]) / 2.;
+        phi[0] = (1 - xi[0]) / 2.; //xi[0] é a coordenada no eixo 'x' (0)?
         phi[1] = (1 + xi[0]) / 2.;
-        
         dphi(0,0) = -0.5;
         dphi(0,1) = 0.5;
+
+    /*if (orders[2] > 2) {
+      
+       
+        
+        if(nshape==2){
+        
+        
+        
+       
+        }else if(nshape==3){
+        
+        phi[0] = (1 - xi[0]) / 2.;
+        phi[1] = (1 + xi[0]) / 2.;
+        //phi[2] = ; Qual função utilizar?
+
+        dphi(0,0) = -0.5;
+        dphi(0,1) = 0.5;
+        dphi(0,2) = derivada*/
+        }
+        
         
         /*std::cout << "Shape1d::Shape: Please implement it for order > 2\n";
         DebugStop();*/
-        }
+        
     
     
-    }
+    
 
 /// returns the number of shape functions associated with a side
 int Shape1d::NShapeFunctions(int side, int order){

@@ -30,6 +30,8 @@ void Geom1d::Shape(const VecDouble &xi, VecDouble &phi, MatrixDouble &dphi) {
 
    if (phi.size() != 2) DebugStop();
 
+    //xi é o ksi variando de -1 a 1
+    
     phi[0] = (1 - xi[0]) / 2.;
     phi[1] = (1 + xi[0]) / 2.;
 
@@ -39,27 +41,45 @@ void Geom1d::Shape(const VecDouble &xi, VecDouble &phi, MatrixDouble &dphi) {
 }
 
 void Geom1d::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x) {
-    
+    /*
+    VecDouble phi(2);
+    MatrixDouble dphi (2,1); (row, col)
+    Shape(xi,phi,dphi);
+    */
+
     VecDouble phi(2);
     MatrixDouble dphi (2,1);
     Shape(xi,phi,dphi);
 
-    x[0] = NodeCo(0,0) * phi[0] + NodeCo(0,1) + phi[1];
+    int nrow = NodeCo.rows();
+    int ncol = NodeCo.cols();
+
+    for (int i=1; i < nCorners; i++){
+        for (int j=0; j < nrow; j++){
+            x[j] += NodeCo(j,i) * phi[1];
+        }
+    }
 
     //coordenadas
 }
 
 void Geom1d::GradX(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x, MatrixDouble &gradx) {
     
-   VecDouble phi(2);
+    VecDouble phi(2);
     MatrixDouble dphi (2,1);
     Shape(xi,phi,dphi);
 
-    x[0] = NodeCo(0,0) * phi[0] + NodeCo(0,1) + phi[1];     
+    // Novas definições:
+    int npoints = NodeCo.cols(); // pontos
+    int ndirections = NodeCo.rows(); // direções x, y e z
 
-    gradx(0,0) = NodeCo(0,0) * dphi(0,0);
-    gradx(0,1) = NodeCo(0,1) * dphi(1,0);
-
+    gradx.resize(ndirections,1);
+    for(int i=0; i<ndirections; i++){
+        for(int j=0; j<npoints; j++){
+            x[i] += NodeCo(i,j) * phi[j]; // coordenada dos nós * função em cada nó
+            gradx(i,0) = NodeCo(i,j) * dphi(j,0); //phi relaciona-se com o nº de ptos = j
+        }  
+    }
 }
 
 void Geom1d::SetNodes(const VecInt &nodes) {

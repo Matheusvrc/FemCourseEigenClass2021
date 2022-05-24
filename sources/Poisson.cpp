@@ -134,20 +134,31 @@ void Poisson::Contribute(IntPointData &data, double weight, MatrixDouble &EK, Ma
         res = resloc[0];
     }
     /* Opção 1
-    EK += dphi * dphi * weight;
+    EK += (dphi.transpose() * dphi + phi.transpose()) * weight;
     */
 
-    /* Opção 2
+    //como puxar o nShape?
 
-    for (int i = 0, i<nShape; i++){
-        for (int j=0; j < nShape; j++){
-            EK(i,j) += dphi(i,0) * dphi(j,0) * weight;
-        }
+    int nshape = phi.rows();
+
+    for (int i = 0; i < nshape; i++){
+        for (int j=0; j < nshape; j++){
+            //Matriz de rigidez:
+            EK(i,j) += (dphi(0,i) * dphi(0,j) + phi(i,0) * phi(j,0))*weight ;
+            }   
+        //Vetor de força:
+        //EF (i,0) += data.x[0] * phi(1) * weight;
+        EF (i,0) += res * phi(1) * weight; 
     }
-    */
-    
+
+    std::cout << "phi: " << phi << std::endl;
+    std::cout << "dphi: " << dphi << std::endl;
+    std::cout << "EK: " << EK << std::endl;
+    std::cout << "Peso: " << weight << std::endl;
+    std::cout << "EF: " << EF << std::endl;
+        
     /*
-    +++++++++++++++++
+    //+++++++++++++++++
     // Please implement me
     std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
     DebugStop();
