@@ -67,19 +67,35 @@ void Assemble::Compute(SparseMat &globmat, MatrixDouble &rhs) {
 
         cel->CalcStiff(ek, ef);
         
-        //Como determinar os valores nos vetores e nas matrizes?
-        /*
-        for (int i=0; i<nshape; i++){
-            for(int j=0; j<nshape; j++){
-                ek(i,j)=EK(i,j);
-            }
-        */  
-        }
         
+        /*
         //+++++++++++++++++
         std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
         DebugStop();
         //+++++++++++++++++
+        */
+
+        int ndof = cel->NDOF();
+        VecInt iglob(neq,1);
+        int ni = 0;
+        for (int i=0; i < ndof; i++){
+            int dofindex = cel->GetDOFIndex(i);
+            DOF dof = cmesh->GetDOF(dofindex);
+            for (int j = 0; j<dof.GetNShape() * dof.GetNState(); j++){
+                iglob[ni] = dof.GetFirstEquation() + j;
+                ni++;
+            }
+        }
+
+        for (int i=0; i < ek.rows(); i++){
+            int IG = iglob[i];
+            rhs(IG,0) += ef(i,0);
+
+            for (int j = 0; j < ek.rows(); j++){
+                int JG = iglob[j];
+                globmat.coeffRef(IG,JG) += ek(i,j);
+            }
+        }
 } 
-    
+}   
 

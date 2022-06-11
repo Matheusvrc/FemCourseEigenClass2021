@@ -35,16 +35,21 @@ void IntRule1d::SetOrder(int order) {
 
 void IntRuleQuad::SetOrder(int order) {
     
-    int npoints=(order-1)/2; //ordem = 2*npoints + 1
-    fPoints.resize(npoints,1); //coordenadas dos pontos de integração
+    int npoints=((2*(order))-1)*((2*(order))-1); //a ordem estava dando 'zero' e, portanto, gerando npoints negativo
+    
+    if(order==0){
+        npoints=1;
+    }
+
+    fPoints.resize(npoints,2); //coordenadas dos pontos de integração
     fWeights.resize(npoints); //A0 e A1
 
     VecDouble coordAux(npoints);
-    gaulegQuad(-1,1,coordAux,fWeights); //adicionei
+    /*gaulegQuad(-1,1,coordAux,fWeights); //adicionei */
     
     //adicionei o comando switch
     switch (npoints){
-        case 1:
+        case 2:
             
             //fPoints[]{0.5773502692, -0.5773502692}; inicialização uniforme
 
@@ -55,7 +60,7 @@ void IntRuleQuad::SetOrder(int order) {
             fWeights[1]=1.;
             break;
         
-        case 2:
+        case 3:
             fPoints(0,0)=0.7745966692;
             fPoints(1,0)=0.;
             fPoints(2,0)=-0.7745966692;
@@ -65,7 +70,7 @@ void IntRuleQuad::SetOrder(int order) {
             fWeights[2]=0.5555555556;
             break;
             
-        case 3:
+        case 4:
             fPoints(0,0)=0.8611363116;
             fPoints(1,0)=0.3399810436;
             fPoints(2,0)=-0.3399810436;
@@ -77,7 +82,7 @@ void IntRuleQuad::SetOrder(int order) {
             fWeights[3]=0.3478548451;
             break;
 
-        case 4:
+        case 5:
             fPoints(0,0)=0.9061798459;
             fPoints(1,0)=0.5384693101;
             fPoints(2,0)=0.;

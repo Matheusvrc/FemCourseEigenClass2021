@@ -148,7 +148,7 @@ void Poisson::Contribute(IntPointData &data, double weight, MatrixDouble &EK, Ma
             }   
         //Vetor de força:
         //EF (i,0) += data.x[0] * phi(1) * weight;
-        EF (i,0) += res * phi(1) * weight; 
+        EF (i,0) += res * phi(i) * weight; 
     }
 
     std::cout << "phi: " << phi << std::endl;
@@ -169,7 +169,7 @@ void Poisson::Contribute(IntPointData &data, double weight, MatrixDouble &EK, Ma
 void Poisson::PostProcessSolution(const IntPointData &data, const int var, VecDouble &Solout) const {
     MatrixDouble gradudx, flux;
     gradudx = data.axes.transpose()*data.dsoldx;
-    flux = -permeability*gradudx;
+    flux = -gradudx*permeability;
     
     int nstate = this->NState();
     if(nstate != 1) DebugStop();

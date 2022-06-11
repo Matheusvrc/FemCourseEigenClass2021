@@ -2,74 +2,125 @@
 #include "GeoMesh.h"
 #include "GeoElementTemplate.h"
 #include "Geom1d.h"
+#include "Geom0d.h"
 #include "VTKGeoMesh.h"
 #include "CompMesh.h"
 #include "Poisson.h"
 #include "Analysis.h"
-#include "PostProcess.h"
+#include "PostProcessTemplate.h"
 
 using namespace std;
 
-int main() {
-       //Creating a Geometric Mesh
-       int nElements = 4; //nElements = nNodes-1
-       int nNodes = nElements + 1;
-       
+int main(){
+    
+    // Creating a Geometric mesh
+    int nElements = 2;
+    int nNodes = nElements+1;
 
-       GeoMesh *gmesh = new GeoMesh();
-       gmesh->SetDimension(1); //1D
-       gmesh->SetNumNodes(nNodes);
-       gmesh->SetNumElements(nElements);
+    GeoMesh *gmesh = new GeoMesh();   
+    gmesh->SetDimension(1);
+    gmesh->SetNumNodes(nNodes);
+    gmesh->SetNumElements(nElements);
 
-       VecDouble coord(3); //vetor de coordenadas com x, y e z
-       coord[0] = 0.0; //(x)
-       coord[1] = 0.0; //(y)
-       coord[2] = 0.0; //(z)
-       gmesh->Node(0).SetCo(coord);
+    VecDouble coord(3);
+    coord[0] = 0.0;
+    coord[1] = 0.0;
+    coord[2] = 0.0;
+    gmesh->Node(0).SetCo(coord);
 
-        double deltaX = 1. / nElements; //comprimento do elemento (h no livro do Becker)
-        double deltaY = 0.0;
+    double deltaX = 1./nElements;
+    double deltaY = 0.0;
 
-        /* Delta x e Delta y são as coordenadas que compõe o elemento em 'x' e 'y'.
-        O elemento pode ser curvo, inclinado ... */
+    int matid = 1;
 
-        int matid = 1; //material
+    for (int iEl = 0; iEl < nElements; iEl++)
+    {
+        coord[0] = deltaX*(iEl+1);
+        coord[1] = deltaY*(iEl+1);
+        gmesh->Node(iEl+1).SetCo(coord);
 
-        for (int iEl = 0; iEl < nElements; iEl++) {
+        VecInt nodes(2);
+        nodes[0] = iEl;
+        nodes[1] = iEl + 1;
+        GeoElement *gel = new GeoElementTemplate<Geom1d>(nodes, matid, gmesh, iEl);
+        gmesh->SetElement(iEl, gel);
+    }
 
-            coord[0] = deltaX*(iEl+1); //(multiplica o tamanho de cada elemento pela coordenada inicial)
-            coord[1] = deltaY*(iEl+1); //(y)
-            gmesh->Node(iEl+1).SetCo(coord); //gravando as coordenadas no vetor Node
+    //Inserindo os dois pontos da extremidade
+    int matIdBC = 2;
+    VecInt nIndex(1);
+    //Primeiro ponto
+    nIndex[0] = 0;
+    GeoElement *point1 = new GeoElementTemplate<Geom0d>(nIndex, matIdBC, gmesh, nElements);
+    gmesh->SetElement(nElements, point1);
+    //Ultimo ponto
+    nIndex[0] = nNodes-1;
+    GeoElement *point2 = new GeoElementTemplate<Geom0d>(nIndex, matIdBC, gmesh, nElements+1);
+    gmesh->SetElement(nElements+1, point2);
 
-            VecInt nodes(2); //criado um VecInt nome nodes com 2 espaços de memória
-            nodes[0] = iEl;
-            nodes[1] = iEl + 1;
-            GeoElement *gel = new GeoElementTemplate<Geom1d>(nodes, matid, gmesh, iEl);
-            gmesh->SetElement(iEl, gel);
-           }
+    gmesh->BuildConnectivity();
 
-       gmesh->BuildConnectivity();
-       gmesh->Print(cout);
+    gmesh->Print(std::cout);
 
-        VTKGeoMesh printer;
-        printer.PrintGMeshVTK(gmesh,"geoMesh.vtk");
+    VTKGeoMesh printer;
+    printer.PrintGMeshVTK(gmesh,"geoMesh.vtk");
+    
+    //*************NEW*************
+    //Cria uma malha computacional
+    CompMesh cmesh(gmesh);
 
-        //Cria uma malha computacional
-        CompMesh cmesh(gmesh); 
+    //Estabelece um tipo de material
+    MatrixDouble perm(1,1);
+    perm(0,0)=1.;
+    Poisson *mat = new Poisson(matid,perm);
 
-        //Estabelece um tipo de material
-        MatrixDouble perm(1,1); //matriz 2x2
-        perm(0,0)=1.;
-        Poisson *mat = new Poisson(matid,perm); //perm é a cte 'k' na fórmula (permeabilidade)
-        int a=1;
+    //Inserir o material de condição de contorno
+    auto force = [](const VecDouble &x, VecDouble &res)
+    {
+        res[0] = x[0];
+    };
+    mat->SetForceFunction(force);
+    MatrixDouble proj(1,1),val1(1,1),val2(1,1);
+    proj.setZero();
+    val1.setZero();
+    val2.setZero();
+    int bcType = 0;
+    L2Projection *bc_point = new L2Projection(bcType,matIdBC,proj,val1,val2);
+    std::vector<MathStatement *> mathvec = {0,mat,bc_point};
+    cmesh.SetMathVec(mathvec);
+    cmesh.SetDefaultOrder(2);
+    
+    //Insere o material na malha computacional e cria o espaço de aproximação
+    // cmesh.SetMathStatement(matid,mat);
+    cmesh.AutoBuild();
 
-        //Insere o material na malha computacional e cria o espaço de aproximação
-        cmesh.SetMathStatement(matid,mat); //(índice qualquer do material, obj com nome 'mat' e tipo 'poisson')
-        cmesh.AutoBuild();
+    //Análise.
+    Analysis an(&cmesh);
+    an.RunSimulation();
 
-        //Análise
-        Analysis an(&cmesh); //'an' é o nome do obj análise
-        an.RunSimulation();
+
+    PostProcessTemplate<Poisson> postprocess;
+    auto exact = [](const VecDouble &x, VecDouble &val, MatrixDouble &deriv)
+    {
+    val[0] = x[0]-sinh(x[0])/sinh(1.);
+    deriv(0,0) = 1.-cosh(x[0])*cosh(1.);
+    };
+    postprocess.AppendVariable("Sol");
+    postprocess.AppendVariable("DSol");
+
+    postprocess.SetExact(exact);
+    mat->SetExactSolution(exact);
+    printer.PrintSolVTK(&cmesh,postprocess,"result.vtk");
+
+    
+    // //Pos processamento;
+    // PostProcessTemplate<Poisson> postprocess;
+    // postprocess.SetExact(exact);
+    
+    // //Analise do erro;
+    // VecDouble errvec;
+    // errvec = an.PostProcessError(std::cout, postprocess);
 
     return 0;
 }
+

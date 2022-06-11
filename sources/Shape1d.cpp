@@ -29,32 +29,30 @@ void Shape1d::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, MatrixD
         phi[1] = (1 + xi[0]) / 2.;
         dphi(0,0) = -0.5;
         dphi(0,1) = 0.5;
+    
+    if (orders[2] > 1) {
+       /* VecDouble phiCheby(nshape);
+        VecDouble dPhiCheby(nshape);
+        phiCheby[0]=1.;
+        phiCheby[1]=xi[0];
+        dPhiCheby[0]=0.;
+        dPhiCheby[1]=1.;
 
-    /*if (orders[2] > 2) {
-      
-       
+        for (int i = 2; i < nshape; i++)
+        {
+            phiCheby[i]=2.*xi[0]*phiCheby[i-1]-phiCheby[i-2];
+            dPhiCheby[i]=2.*xi[0]*dPhiCheby[i-1]+2.*phiCheby[i-1] */
+        if (nshape==3){
+            phi[2]=4*phi[0]*phi[1];
+            dphi(0,2)=4*dphi(0,0)*phi[1]+4*phi[0]*dphi(0,1);
+        }
         
-        if(nshape==2){
-        
-        
-        
-       
-        }else if(nshape==3){
-        
-        phi[0] = (1 - xi[0]) / 2.;
-        phi[1] = (1 + xi[0]) / 2.;
-        //phi[2] = ; Qual função utilizar?
-
-        dphi(0,0) = -0.5;
-        dphi(0,1) = 0.5;
-        dphi(0,2) = derivada*/
+        }
         }
         
         
         /*std::cout << "Shape1d::Shape: Please implement it for order > 2\n";
         DebugStop();*/
-        
-    
     
     
 

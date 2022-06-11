@@ -74,12 +74,16 @@ void Geom1d::GradX(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x, Matr
     int ndirections = NodeCo.rows(); // direções x, y e z
 
     gradx.resize(ndirections,1);
+    gradx.fill(0.);
+
     for(int i=0; i<ndirections; i++){
         for(int j=0; j<npoints; j++){
             x[i] += NodeCo(i,j) * phi[j]; // coordenada dos nós * função em cada nó
-            gradx(i,0) = NodeCo(i,j) * dphi(j,0); //phi relaciona-se com o nº de ptos = j
+            gradx(i,0) += NodeCo(i,j) * dphi(j,0); //phi relaciona-se com o nº de ptos = j
         }  
     }
+    //std::cout << "GradX: \n" << gradx << std::endl;
+    //std::cout << "NodeCo: \n" << NodeCo << std::endl;
 }
 
 void Geom1d::SetNodes(const VecInt &nodes) {

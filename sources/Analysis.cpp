@@ -65,7 +65,9 @@ void Analysis::RunSimulation() {
 
     assemb.Compute(K, F);
     std::cout << "Assemble done!" << std::endl;
-
+    std::cout << "Matriz global:\n " << K << std::endl;
+    std::cout << "Vetor global:\n " << F << std::endl;
+    
     GlobalSystem = K;
     RightHandSide = F;
 
@@ -80,6 +82,7 @@ void Analysis::RunSimulation() {
     Solution = solver.solve(F); 
 
     std::cout << "Solution computed!" << std::endl;
+    std::cout << "Solution =\n" << Solution << std::endl;
     
     int solsize = Solution.rows();
     VecDouble sol(solsize);
