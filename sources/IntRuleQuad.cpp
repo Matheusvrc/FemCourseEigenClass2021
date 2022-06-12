@@ -15,7 +15,7 @@
 IntRuleQuad::IntRuleQuad(){
 }
 
-IntRuleQuad::IntRuleQuad(int order) {
+IntRuleQuad::IntRuleQuad(int order) : IntRule(order){
     SetOrder(order); //adicionei
     
     /*
@@ -24,7 +24,6 @@ IntRuleQuad::IntRuleQuad(int order) {
     */
 }
 
-static int ComputingSymmetricCubatureRule(int order, MatrixDouble &Points, VecDouble &Weights); //adicionei
 /*
 void IntRule1d::SetOrder(int order) {
     fOrder = order;
@@ -35,69 +34,88 @@ void IntRule1d::SetOrder(int order) {
 
 void IntRuleQuad::SetOrder(int order) {
     
-    int npoints=((2*(order))-1)*((2*(order))-1); //a ordem estava dando 'zero' e, portanto, gerando npoints negativo
+    int npoints=((2*(order))-1)*((2*(order))-1);
     
     if(order==0){
         npoints=1;
     }
 
-    fPoints.resize(npoints,2); //coordenadas dos pontos de integração
-    fWeights.resize(npoints); //A0 e A1
-
-    VecDouble coordAux(npoints);
-    /*gaulegQuad(-1,1,coordAux,fWeights); //adicionei */
+    //VecDouble coordAux(npoints);
     
-    //adicionei o comando switch
-    switch (npoints){
-        case 2:
-            
-            //fPoints[]{0.5773502692, -0.5773502692}; inicialização uniforme
+    
+    switch (order){
+        case 0:
+        case 1:
 
-            fPoints(0,0)=0.5773502692;
-            fPoints(1,0)=-0.5773502692;
-
-            fWeights[0]=1.;
-            fWeights[1]=1.;
-            break;
+        fPoints.resize(1, Dimension());
+        fWeights.resize(1);
         
-        case 3:
-            fPoints(0,0)=0.7745966692;
-            fPoints(1,0)=0.;
-            fPoints(2,0)=-0.7745966692;
+        fPoints(0, 0) = 0.;
+        fPoints(0, 1) = 0.;
+        
+        fWeights[0] = 4.;
+        break;
 
-            fWeights[0]=0.5555555556;
-            fWeights[1]=0.8888888889;
-            fWeights[2]=0.5555555556;
-            break;
-            
-        case 4:
-            fPoints(0,0)=0.8611363116;
-            fPoints(1,0)=0.3399810436;
-            fPoints(2,0)=-0.3399810436;
-            fPoints(3,0)=-0.8611363116;
+    case 2:
+    case 3:
+        fPoints.resize(4, Dimension());
+        fWeights.resize(4);
+        
+        fPoints(0, 0) = -1. / sqrt(3.);
+        fPoints(0, 1) = -1. / sqrt(3.);
+        fPoints(1, 0) = 1. / sqrt(3.);
+        fPoints(1, 1) = -1. / sqrt(3.);
+        fPoints(2, 0) = -1. / sqrt(3.);
+        fPoints(2, 1) = 1. / sqrt(3.);
+        fPoints(3, 0) = 1. / sqrt(3.);
+        fPoints(3, 1) = 1. / sqrt(3.);
+        
+        fWeights[0] = 1.;
+        fWeights[1] = 1.;
+        fWeights[2] = 1.;
+        fWeights[3] = 1.;
+        break;
 
-            fWeights[0]=0.3478548451;
-            fWeights[1]=0.6521451549;
-            fWeights[2]=0.6521451549;
-            fWeights[3]=0.3478548451;
-            break;
+    case 4:
+    case 5:
 
-        case 5:
-            fPoints(0,0)=0.9061798459;
-            fPoints(1,0)=0.5384693101;
-            fPoints(2,0)=0.;
-            fPoints(3,0)=-0.5384693101;
-            fPoints(4,0)=-0.9061798459;
+        fPoints.resize(9, Dimension());
+        fWeights.resize(9);
+        
+        fPoints(0, 0) = -sqrt(3. / 5);
+        fPoints(0, 1) = -sqrt(3. / 5);
+        fPoints(1, 0) = 0.;
+        fPoints(1, 1) = -sqrt(3. / 5);
+        fPoints(2, 0) = sqrt(3. / 5);
+        fPoints(2, 1) = -sqrt(3. / 5);
+        fPoints(3, 0) = -sqrt(3. / 5);
+        fPoints(3, 1) = 0.;
+        fPoints(4, 0) = 0.;
+        fPoints(4, 1) = 0.;
+        fPoints(5, 0) = sqrt(3. / 5);
+        fPoints(5, 1) = 0.;
+        fPoints(6, 0) = -sqrt(3. / 5);
+        fPoints(6, 1) = sqrt(3. / 5);
+        fPoints(7, 0) = 0.;
+        fPoints(7, 1) = sqrt(3. / 5);
+        fPoints(8, 0) = sqrt(3. / 5);
+        fPoints(8, 1) = sqrt(3. / 5);
 
-            fWeights[0]=0.2369268850;
-            fWeights[1]=0.4786286705;
-            fWeights[2]=0.5688888889;
-            fWeights[3]=0.4786286705;
-            fWeights[4]=0.2369268850;
-            break;
+        
+        fWeights[0] = 25. / 81;
+        fWeights[1] = 40. / 81;
+        fWeights[2] = 25. / 81;
+        fWeights[3] = 40. / 81;
+        fWeights[4] = 64. / 81;
+        fWeights[5] = 40. / 81;
+        fWeights[6] = 25. / 81;
+        fWeights[7] = 40. / 81;
+        fWeights[8] = 25. / 81;
 
-        default:
-        std::cout << "\nErro: Ordem superior ao limite programado\n";
+        break;
+
+    default:
+        DebugStop();
     }
 
     /*

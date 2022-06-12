@@ -56,7 +56,7 @@ void Geom1d::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x) {
 
     for (int i=1; i < nCorners; i++){
         for (int j=0; j < nrow; j++){
-            x[j] += NodeCo(j,i) * phi[1];
+            x[j] += NodeCo(j,i) * phi[1]; 
         }
     }
 

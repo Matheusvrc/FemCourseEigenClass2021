@@ -24,7 +24,7 @@ IntRule1d::IntRule1d(int order) : IntRule(order) {
 }
 static int ComputingSymmetricCubatureRule(int order, MatrixDouble &Points, VecDouble &Weights);
 void IntRule1d::SetOrder(int order) {
-    fOrder = order+1; //a ordem estava dando 'zero' e, portanto, gernado npoints negativo
+    fOrder = order; //a ordem estava dando 'zero' e, portanto, gernado npoints negativo
    if (order < 0 || order > MaxOrder()) {
         DebugStop();
     }

@@ -65,7 +65,7 @@ void IntRule::Point(int p, VecDouble& co, double& w) const {
     int dim = co.size();
 
     for (int i = 0; i < dim; i++) {
-        co[i] = fPoints(p, i); //inverti a posição do 'p' e do 'i' - era fPoints(p,i)
+        co[i] = fPoints(p, i);
         }
     w = fWeights[p];
 }
