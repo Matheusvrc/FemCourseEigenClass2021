@@ -21,7 +21,8 @@ GeomQuad& GeomQuad::operator=(const GeomQuad& copy) {
 }
 
 void GeomQuad::Shape(const VecDouble &xi, VecDouble &phi, MatrixDouble &dphi) {
-   
+    if(xi.size() != Dimension || phi.size() != nCorners || dphi.rows() != Dimension || dphi.cols() != nCorners) DebugStop();
+
     phi[0] = ((1 - xi[0]) * (1 - xi[1])) / 4.; //xi[0]=x e xi[1]=y
     phi[1] = ((1 + xi[0]) * (1 - xi[1])) / 4.;
     phi[2] = ((1 + xi[0]) * (1 + xi[1])) / 4.;
@@ -29,15 +30,15 @@ void GeomQuad::Shape(const VecDouble &xi, VecDouble &phi, MatrixDouble &dphi) {
 
 
     //(rows,columns)
-    dphi(0,0) = -0.25; //dphi[0]/dx
-    dphi(0,1) = 0.25;  //dphi[1]/dx
-    dphi(0,2) = 0.25;  //dphi[2]/dx
-    dphi(0,3) = -0.25; //dphi[3]/dx
+    dphi(0,0) = (xi[1]-1.)/4.; //dphi[0]/dx
+    dphi(0,1) = (1.-xi[1])/4.;  //dphi[1]/dx
+    dphi(0,2) = (1.+xi[1])/4.;  //dphi[2]/dx
+    dphi(0,3) = (-1.-xi[1])/4.; //dphi[3]/dx
 
-    dphi(1,0) = -0.25; //dphi[0]/dy
-    dphi(1,1) = -0.25; //dphi[1]/dy
-    dphi(1,2) = 0.25;  //dphi[2]/dy
-    dphi(1,3) = 0.25;  //dphi[3]/dy
+    dphi(1,0) = (xi[0]-1.)/4.; //dphi[0]/dy
+    dphi(1,1) = (-1.-xi[0])/4.; //dphi[1]/dy
+    dphi(1,2) = (1.+xi[0])/4.;  //dphi[2]/dy
+    dphi(1,3) = (1.-xi[0])/4.;  //dphi[3]/dy
 
     //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
    
@@ -47,9 +48,14 @@ void GeomQuad::Shape(const VecDouble &xi, VecDouble &phi, MatrixDouble &dphi) {
 
 void GeomQuad::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x) {
     
-    VecDouble phi(4);
-    MatrixDouble dphi (2,4);
+    if(xi.size() != Dimension) DebugStop();
+    if(x.size() != NodeCo.rows()) DebugStop();
+    if(NodeCo.cols() != nCorners) DebugStop();
+
+    VecDouble phi(nCorners);
+    MatrixDouble dphi (Dimension,nCorners);
     Shape(xi,phi,dphi);
+    x.setZero();
 
     int nrow = NodeCo.rows();
     int ncol = NodeCo.cols();
@@ -72,20 +78,22 @@ void GeomQuad::GradX(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x, Ma
     
     //Como colocar uma variavel puxando a ordem de interpolação para phi?      
 
-    VecDouble phi(4);
-    MatrixDouble dphi (2,4);
+    VecDouble phi(nCorners);
+    MatrixDouble dphi (Dimension,nCorners);
     Shape(xi,phi,dphi);
+    x.setZero();
 
     int npoints = NodeCo.cols(); // pontos
     int ndirections = NodeCo.rows(); // direções x, y e z
 
-    gradx.resize(ndirections,1);
+    gradx.resize(ndirections,npoints);
     gradx.fill(0.);
 
     for(int i=0; i<ndirections; i++){
         for(int j=0; j<npoints; j++){
             x[i] += NodeCo(i,j) * phi[j]; // coordenada dos nós * função em cada nó
-            gradx(i,j) += NodeCo(i,j) * dphi(i,j); //phi relaciona-se com o nº de ptos = j
+            gradx(i,0) += NodeCo(i,j) * dphi(0,i); //phi relaciona-se com o nº de ptos = j
+            gradx(i,1) += NodeCo(i,j) * dphi(1,i);
         }  
     
     //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;

@@ -24,27 +24,27 @@ void ShapeQuad::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, Matri
     }
 
     auto nf = NShapeFunctions(orders);
-
+    
     phi.resize(nf);
     dphi.resize(2,nf); //x e y
 
     //função chapéu    
-    phi[0] = ((1 - xi[0]) * (1 - xi[1])) / 4.; //xi[0]=x e xi[1]=y
-    phi[1] = ((1 + xi[0]) * (1 - xi[1])) / 4.;
-    phi[2] = ((1 + xi[0]) * (1 + xi[1])) / 4.;
-    phi[3] = ((1 - xi[0]) * (1 + xi[1])) / 4.;
+    phi[0] = ((1. - xi[0]) * (1. - xi[1])) / 4.; //xi[0]=x e xi[1]=y
+    phi[1] = ((1. + xi[0]) * (1. - xi[1])) / 4.;
+    phi[2] = ((1. + xi[0]) * (1. + xi[1])) / 4.;
+    phi[3] = ((1. - xi[0]) * (1. + xi[1])) / 4.;
 
 
     //(rows,columns)
-    dphi(0,0) = -0.25; //dphi[0]/dx
-    dphi(0,1) = 0.25;  //dphi[1]/dx
-    dphi(0,2) = 0.25;  //dphi[2]/dx
-    dphi(0,3) = -0.25; //dphi[3]/dx
+    dphi(0,0) = (xi[1]-1.)/4.; //dphi[0]/dx
+    dphi(0,1) = (1.-xi[1])/4.;  //dphi[1]/dx
+    dphi(0,2) = (1.+xi[1])/4.;  //dphi[2]/dx
+    dphi(0,3) = -(1.+xi[1])/4.; //dphi[3]/dx
 
-    dphi(1,0) = -0.25; //dphi[0]/dy
-    dphi(1,1) = -0.25; //dphi[1]/dy
-    dphi(1,2) = 0.25;  //dphi[2]/dy
-    dphi(1,3) = 0.25;  //dphi[3]/dy
+    dphi(1,0) = (xi[0]-1.)/4.; //dphi[0]/dy
+    dphi(1,1) = -(1.+xi[0])/4.; //dphi[1]/dy
+    dphi(1,2) = (1.+xi[0])/4.;  //dphi[2]/dy
+    dphi(1,3) = (1.-xi[0])/4.;  //dphi[3]/dy
 
     if (orders[nf-1] > 2) {
         if (nf==3){

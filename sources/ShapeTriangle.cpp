@@ -43,17 +43,17 @@ void ShapeTriangle::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, M
 
     if (orders[nf-1] > 2) {
       
-        phi[3] = 4*phi[0]*phi[1];
-        dphi(0,3) = 4*dphi(0,0)*phi[1]+4*dphi(0,1)*phi[0]; //dphi[3]/dx
-        dphi(1,3) = 4*dphi(1,0)*phi[1]+4*dphi(1,1)*phi[0]; //dphi[3]/dy
+        phi[3] = 4.*phi[0]*phi[1];
+        dphi(0,3) = 4.*dphi(0,0)*phi[1]+4.*dphi(0,1)*phi[0]; //dphi[3]/dx
+        dphi(1,3) = 4.*dphi(1,0)*phi[1]+4.*dphi(1,1)*phi[0]; //dphi[3]/dy
         
-        phi[4] = 4*phi[1]*phi[2];
-        dphi(0,4) = 4*dphi(0,1)*phi[2]+4*dphi(0,2)*phi[1]; //dphi[4]/dx
-        dphi(1,4) = 4*dphi(1,1)*phi[2]+4*dphi(1,2)*phi[1]; //dphi[4]/dy
+        phi[4] = 4.*phi[1]*phi[2];
+        dphi(0,4) = 4.*dphi(0,1)*phi[2]+4.*dphi(0,2)*phi[1]; //dphi[4]/dx
+        dphi(1,4) = 4.*dphi(1,1)*phi[2]+4.*dphi(1,2)*phi[1]; //dphi[4]/dy
         
-        phi[5] = 4*phi[2]*phi[0];
-        dphi(0,5) = 4*dphi(0,2)*phi[0]+4*dphi(0,0)*phi[2]; //dphi[4]/dx
-        dphi(1,5) = 4*dphi(1,2)*phi[0]+4*dphi(1,0)*phi[2]; //dphi[4]/dy
+        phi[5] = 4.*phi[2]*phi[0];
+        dphi(0,5) = 4.*dphi(0,2)*phi[0]+4.*dphi(0,0)*phi[2]; //dphi[4]/dx
+        dphi(1,5) = 4.*dphi(1,2)*phi[0]+4.*dphi(1,0)*phi[2]; //dphi[4]/dy
       
        /* std::cout << "ShapeTriangle::Shape, only implemented until order = 2" << std::endl;
         DebugStop(); */
@@ -61,8 +61,8 @@ void ShapeTriangle::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, M
     
     
     
-    std::cout << "Please implement me\n";
-    DebugStop();
+    /*std::cout << "Please implement me\n";
+    DebugStop();*/
     
     
 }

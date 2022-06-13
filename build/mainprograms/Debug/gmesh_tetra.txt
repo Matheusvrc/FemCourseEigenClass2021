@@ -1,0 +1,183 @@
+
+		GEOMETRIC MESH INFORMATION
+
+Number of nodes:	4
+Number of elements:	15
+
+	Node Information
+Node index: 0		Coordinates:	0	0	0
+Node index: 1		Coordinates:	1	0	0
+Node index: 2		Coordinates:	0	1	0
+Node index: 3		Coordinates:	0	0	1
+
+	Element Information
+Element index:		0
+Number of nodes:	4
+Corner nodes:		4
+Nodes indexes		0   1   2   3   
+Number of sides:	15
+Material Id:		1
+Neighbours for side 0:	14/0 12/0 11/0 8/0 7/1 5/0 1/0 
+Neighbours for side 1:	13/0 12/1 11/1 9/0 6/0 5/1 2/0 
+Neighbours for side 2:	14/1 13/1 11/2 10/0 7/0 6/1 3/0 
+Neighbours for side 3:	14/2 13/2 12/2 10/1 9/1 8/1 4/0 
+Neighbours for side 4:	12/3 11/3 5/2 
+Neighbours for side 5:	13/3 11/4 6/2 
+Neighbours for side 6:	14/3 11/5 7/2 
+Neighbours for side 7:	14/5 12/5 8/2 
+Neighbours for side 8:	13/5 12/4 9/2 
+Neighbours for side 9:	14/4 13/4 10/2 
+Neighbours for side 10:	11/6 
+Neighbours for side 11:	12/6 
+Neighbours for side 12:	13/6 
+Neighbours for side 13:	14/6 
+Neighbours for side 14:	
+
+Element index:		1
+Number of nodes:	1
+Corner nodes:		1
+Nodes indexes		0   
+Number of sides:	1
+Material Id:		1
+Neighbours for side 0:	0/0 14/0 12/0 11/0 8/0 7/1 5/0 
+
+Element index:		2
+Number of nodes:	1
+Corner nodes:		1
+Nodes indexes		1   
+Number of sides:	1
+Material Id:		1
+Neighbours for side 0:	0/1 13/0 12/1 11/1 9/0 6/0 5/1 
+
+Element index:		3
+Number of nodes:	1
+Corner nodes:		1
+Nodes indexes		2   
+Number of sides:	1
+Material Id:		1
+Neighbours for side 0:	0/2 14/1 13/1 11/2 10/0 7/0 6/1 
+
+Element index:		4
+Number of nodes:	1
+Corner nodes:		1
+Nodes indexes		3   
+Number of sides:	1
+Material Id:		1
+Neighbours for side 0:	0/3 14/2 13/2 12/2 10/1 9/1 8/1 
+
+Element index:		5
+Number of nodes:	2
+Corner nodes:		2
+Nodes indexes		0   1   
+Number of sides:	3
+Material Id:		1
+Neighbours for side 0:	1/0 0/0 14/0 12/0 11/0 8/0 7/1 
+Neighbours for side 1:	2/0 0/1 13/0 12/1 11/1 9/0 6/0 
+Neighbours for side 2:	0/4 12/3 11/3 
+
+Element index:		6
+Number of nodes:	2
+Corner nodes:		2
+Nodes indexes		1   2   
+Number of sides:	3
+Material Id:		1
+Neighbours for side 0:	5/1 2/0 0/1 13/0 12/1 11/1 9/0 
+Neighbours for side 1:	3/0 0/2 14/1 13/1 11/2 10/0 7/0 
+Neighbours for side 2:	0/5 13/3 11/4 
+
+Element index:		7
+Number of nodes:	2
+Corner nodes:		2
+Nodes indexes		2   0   
+Number of sides:	3
+Material Id:		1
+Neighbours for side 0:	6/1 3/0 0/2 14/1 13/1 11/2 10/0 
+Neighbours for side 1:	5/0 1/0 0/0 14/0 12/0 11/0 8/0 
+Neighbours for side 2:	0/6 14/3 11/5 
+
+Element index:		8
+Number of nodes:	2
+Corner nodes:		2
+Nodes indexes		0   3   
+Number of sides:	3
+Material Id:		1
+Neighbours for side 0:	7/1 5/0 1/0 0/0 14/0 12/0 11/0 
+Neighbours for side 1:	4/0 0/3 14/2 13/2 12/2 10/1 9/1 
+Neighbours for side 2:	0/7 14/5 12/5 
+
+Element index:		9
+Number of nodes:	2
+Corner nodes:		2
+Nodes indexes		1   3   
+Number of sides:	3
+Material Id:		1
+Neighbours for side 0:	6/0 5/1 2/0 0/1 13/0 12/1 11/1 
+Neighbours for side 1:	8/1 4/0 0/3 14/2 13/2 12/2 10/1 
+Neighbours for side 2:	0/8 13/5 12/4 
+
+Element index:		10
+Number of nodes:	2
+Corner nodes:		2
+Nodes indexes		2   3   
+Number of sides:	3
+Material Id:		1
+Neighbours for side 0:	7/0 6/1 3/0 0/2 14/1 13/1 11/2 
+Neighbours for side 1:	9/1 8/1 4/0 0/3 14/2 13/2 12/2 
+Neighbours for side 2:	0/9 14/4 13/4 
+
+Element index:		11
+Number of nodes:	3
+Corner nodes:		3
+Nodes indexes		0   1   2   
+Number of sides:	7
+Material Id:		1
+Neighbours for side 0:	8/0 7/1 5/0 1/0 0/0 14/0 12/0 
+Neighbours for side 1:	9/0 6/0 5/1 2/0 0/1 13/0 12/1 
+Neighbours for side 2:	10/0 7/0 6/1 3/0 0/2 14/1 13/1 
+Neighbours for side 3:	5/2 0/4 12/3 
+Neighbours for side 4:	6/2 0/5 13/3 
+Neighbours for side 5:	7/2 0/6 14/3 
+Neighbours for side 6:	0/10 
+
+Element index:		12
+Number of nodes:	3
+Corner nodes:		3
+Nodes indexes		0   1   3   
+Number of sides:	7
+Material Id:		1
+Neighbours for side 0:	11/0 8/0 7/1 5/0 1/0 0/0 14/0 
+Neighbours for side 1:	11/1 9/0 6/0 5/1 2/0 0/1 13/0 
+Neighbours for side 2:	10/1 9/1 8/1 4/0 0/3 14/2 13/2 
+Neighbours for side 3:	11/3 5/2 0/4 
+Neighbours for side 4:	9/2 0/8 13/5 
+Neighbours for side 5:	8/2 0/7 14/5 
+Neighbours for side 6:	0/11 
+
+Element index:		13
+Number of nodes:	3
+Corner nodes:		3
+Nodes indexes		1   2   3   
+Number of sides:	7
+Material Id:		1
+Neighbours for side 0:	12/1 11/1 9/0 6/0 5/1 2/0 0/1 
+Neighbours for side 1:	11/2 10/0 7/0 6/1 3/0 0/2 14/1 
+Neighbours for side 2:	12/2 10/1 9/1 8/1 4/0 0/3 14/2 
+Neighbours for side 3:	11/4 6/2 0/5 
+Neighbours for side 4:	10/2 0/9 14/4 
+Neighbours for side 5:	12/4 9/2 0/8 
+Neighbours for side 6:	0/12 
+
+Element index:		14
+Number of nodes:	3
+Corner nodes:		3
+Nodes indexes		0   2   3   
+Number of sides:	7
+Material Id:		1
+Neighbours for side 0:	12/0 11/0 8/0 7/1 5/0 1/0 0/0 
+Neighbours for side 1:	13/1 11/2 10/0 7/0 6/1 3/0 0/2 
+Neighbours for side 2:	13/2 12/2 10/1 9/1 8/1 4/0 0/3 
+Neighbours for side 3:	11/5 7/2 0/6 
+Neighbours for side 4:	13/4 10/2 0/9 
+Neighbours for side 5:	12/5 8/2 0/7 
+Neighbours for side 6:	0/13 
+

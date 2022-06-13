@@ -31,12 +31,13 @@ void Geom1d::Shape(const VecDouble &xi, VecDouble &phi, MatrixDouble &dphi) {
    if (phi.size() != 2) DebugStop();
 
     //xi é o ksi variando de -1 a 1
+    if(xi.size() != Dimension || phi.size() != nCorners || dphi.rows() != Dimension || dphi.cols() != nCorners) DebugStop();
     
     phi[0] = (1 - xi[0]) / 2.;
     phi[1] = (1 + xi[0]) / 2.;
 
     dphi(0,0) = -0.5;
-    dphi(1,0) = 0.5;
+    dphi(0,1) = 0.5; 
 
 }
 
@@ -48,15 +49,16 @@ void Geom1d::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x) {
     */
 
     VecDouble phi(2);
-    MatrixDouble dphi (2,1);
+    MatrixDouble dphi (1,2);
     Shape(xi,phi,dphi);
-
+    
     int nrow = NodeCo.rows();
     int ncol = NodeCo.cols();
+    x.setZero();
 
-    for (int i=1; i < nCorners; i++){
+    for (int i=0; i < nCorners; i++){
         for (int j=0; j < nrow; j++){
-            x[j] += NodeCo(j,i) * phi[1]; 
+            x[j] += NodeCo(j,i) * phi[i]; 
         }
     }
 
@@ -66,7 +68,7 @@ void Geom1d::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x) {
 void Geom1d::GradX(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x, MatrixDouble &gradx) {
     
     VecDouble phi(2);
-    MatrixDouble dphi (2,1);
+    MatrixDouble dphi (1,2);
     Shape(xi,phi,dphi);
 
     // Novas definições:
@@ -75,11 +77,12 @@ void Geom1d::GradX(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x, Matr
 
     gradx.resize(ndirections,1);
     gradx.fill(0.);
+    x.setZero();
 
     for(int i=0; i<ndirections; i++){
         for(int j=0; j<npoints; j++){
             x[i] += NodeCo(i,j) * phi[j]; // coordenada dos nós * função em cada nó
-            gradx(i,0) += NodeCo(i,j) * dphi(j,0); //phi relaciona-se com o nº de ptos = j
+            gradx(i,0) += NodeCo(i,j) * dphi(0,j); //phi relaciona-se com o nº de ptos = j
         }  
     }
     //std::cout << "GradX: \n" << gradx << std::endl;
