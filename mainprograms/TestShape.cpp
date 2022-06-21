@@ -278,13 +278,13 @@ TEST_CASE("shape_compare","[functionspace]")
     {
         CheckShape<Shape1d>(1);
         CheckShape<Shape1d>(2);
-    }
+    } 
     SECTION("ShapeQuad")
     {
         CheckShape<ShapeQuad>(1);
         CheckShape<ShapeQuad>(2);
     }
-    SECTION("ShapeTriangle")
+   SECTION("ShapeTriangle")
     {
         CheckShape<ShapeTriangle>(1);
         CheckShape<ShapeTriangle>(2);

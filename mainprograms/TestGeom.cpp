@@ -114,22 +114,22 @@ TEST_CASE("x_compute","[geometry]")
     
     //Teste 1 - Regra de integração - Tabela de valores;
     
-    SECTION("Geom1d")
-    {
-        CheckGeom<Geom1d>(1.);
-    }
+    // SECTION("Geom1d")
+    // {
+    //     CheckGeom<Geom1d>(1.);
+    // }
     SECTION("GeomQuad")
     {
         CheckGeom<GeomQuad>(1.);
     }
-    SECTION("GeomTriangle")
-    {
-        CheckGeom<GeomTriangle>(1.);
-    }
-    SECTION("GeomTetrahedra")
-    {
-        CheckGeom<GeomTetrahedron>(1.);
-    }
+    // SECTION("GeomTriangle")
+    // {
+    //     CheckGeom<GeomTriangle>(1.);
+    // }
+    // SECTION("GeomTetrahedra")
+    // {
+    //     CheckGeom<GeomTetrahedron>(1.);
+    // }
 }
 
 template<class Geom>

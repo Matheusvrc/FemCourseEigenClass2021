@@ -23,21 +23,19 @@ IntRule1d::IntRule1d(int order) : IntRule(order) {
     SetOrder(order);
 }
 static int ComputingSymmetricCubatureRule(int order, MatrixDouble &Points, VecDouble &Weights);
+
 void IntRule1d::SetOrder(int order) {
-    fOrder = order; //a ordem estava dando 'zero' e, portanto, gernado npoints negativo
+    fOrder = order;
    if (order < 0 || order > MaxOrder()) {
         DebugStop();
     }
-
-    /*A0*f(x0)+A1*f(x1)
-    fWeights são as constantes A0 e A1
-    fPoints são os pontos médios de aproximação - {[3^(1/2)/3];-[3^(1/2)/3]} == {0.57735026919;-0.57735026919}
-    */
-    int npoints=(2*(order))-1; //a ordem estava dando 'zero' e, portanto, gerando npoints negativo
-    
-    if(order==0){
-        npoints=1;
-    }
+     
+     int npoints;
+     npoints=(2*(order))-1; 
+     
+     if(order==0){
+       npoints=1;
+     }
 
     fPoints.resize(npoints,1); //coordenadas dos pontos de integração
     fWeights.resize(npoints); //A0 e A1

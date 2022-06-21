@@ -24,25 +24,14 @@ IntRuleQuad::IntRuleQuad(int order) : IntRule(order){
     */
 }
 
-/*
-void IntRule1d::SetOrder(int order) {
-    fOrder = order;
-   if (order < 0 || order > MaxOrder()) {
-        DebugStop();
-    }
-    */
-
 void IntRuleQuad::SetOrder(int order) {
     
+    fOrder = order;
+    if (order < 0 || order > MaxOrder()) DebugStop(); 
+    
     int npoints=((2*(order))-1)*((2*(order))-1);
-    
-    if(order==0){
-        npoints=1;
-    }
-
-    //VecDouble coordAux(npoints);
-    
-    
+    VecDouble coordAux(npoints);
+     
     switch (order){
         case 0:
         case 1:
@@ -61,19 +50,22 @@ void IntRuleQuad::SetOrder(int order) {
         fPoints.resize(4, Dimension());
         fWeights.resize(4);
         
-        fPoints(0, 0) = -1. / sqrt(3.);
-        fPoints(0, 1) = -1. / sqrt(3.);
-        fPoints(1, 0) = 1. / sqrt(3.);
-        fPoints(1, 1) = -1. / sqrt(3.);
-        fPoints(2, 0) = -1. / sqrt(3.);
-        fPoints(2, 1) = 1. / sqrt(3.);
-        fPoints(3, 0) = 1. / sqrt(3.);
-        fPoints(3, 1) = 1. / sqrt(3.);
-        
+        fPoints(0,0) = -1./std::sqrt(3.);
+        fPoints(0,1) = -1./std::sqrt(3.);
         fWeights[0] = 1.;
+
+        fPoints(1,0) = 1./std::sqrt(3.);
+        fPoints(1,1) = -1./std::sqrt(3.);
         fWeights[1] = 1.;
+        
+        fPoints(2,0) = -1./std::sqrt(3.);
+        fPoints(2,1) = 1./std::sqrt(3.);
         fWeights[2] = 1.;
+        
+        fPoints(3,0) = 1./std::sqrt(3.);
+        fPoints(3,1) = 1./std::sqrt(3.);
         fWeights[3] = 1.;
+
         break;
 
     case 4:
@@ -82,35 +74,41 @@ void IntRuleQuad::SetOrder(int order) {
         fPoints.resize(9, Dimension());
         fWeights.resize(9);
         
-        fPoints(0, 0) = -sqrt(3. / 5);
-        fPoints(0, 1) = -sqrt(3. / 5);
-        fPoints(1, 0) = 0.;
-        fPoints(1, 1) = -sqrt(3. / 5);
-        fPoints(2, 0) = sqrt(3. / 5);
-        fPoints(2, 1) = -sqrt(3. / 5);
-        fPoints(3, 0) = -sqrt(3. / 5);
-        fPoints(3, 1) = 0.;
-        fPoints(4, 0) = 0.;
-        fPoints(4, 1) = 0.;
-        fPoints(5, 0) = sqrt(3. / 5);
-        fPoints(5, 1) = 0.;
-        fPoints(6, 0) = -sqrt(3. / 5);
-        fPoints(6, 1) = sqrt(3. / 5);
-        fPoints(7, 0) = 0.;
-        fPoints(7, 1) = sqrt(3. / 5);
-        fPoints(8, 0) = sqrt(3. / 5);
-        fPoints(8, 1) = sqrt(3. / 5);
+        fPoints(0,0) = -(std::sqrt(3./5.));
+        fPoints(0,1) = -(std::sqrt(3./5.));
+        fWeights[0] = 25./81.;
 
+        fPoints(1,0) = 0.;
+        fPoints(1,1) = -(std::sqrt(3./5.));
+        fWeights[1] = 40./81.;
         
-        fWeights[0] = 25. / 81;
-        fWeights[1] = 40. / 81;
-        fWeights[2] = 25. / 81;
-        fWeights[3] = 40. / 81;
-        fWeights[4] = 64. / 81;
-        fWeights[5] = 40. / 81;
-        fWeights[6] = 25. / 81;
-        fWeights[7] = 40. / 81;
-        fWeights[8] = 25. / 81;
+        fPoints(2,0) = (std::sqrt(3./5.));
+        fPoints(2,1) = -(std::sqrt(3./5.));
+        fWeights[2] = 25./81.;
+        
+        fPoints(3,0) = -(std::sqrt(3./5.));
+        fPoints(3,1) = 0.;
+        fWeights[3] = 40./81.;
+
+        fPoints(4,0) = 0.;
+        fPoints(4,1) = 0.;
+        fWeights[4] = 64./81.;
+
+        fPoints(5,0) = (std::sqrt(3./5.));
+        fPoints(5,1) = 0.;
+        fWeights[5] = 40./81.;
+
+        fPoints(6,0) = -(std::sqrt(3./5.));
+        fPoints(6,1) = (std::sqrt(3./5.));
+        fWeights[6] = 25./81.;
+
+        fPoints(7,0) = 0.;
+        fPoints(7,1) = (std::sqrt(3./5.));
+        fWeights[7] = 40./81.;
+
+        fPoints(8,0) = (std::sqrt(3./5.));
+        fPoints(8,1) = (std::sqrt(3./5.));
+        fWeights[8] = 25./81.;
 
         break;
 

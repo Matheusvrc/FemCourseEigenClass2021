@@ -26,9 +26,16 @@ GeomTriangle& GeomTriangle::operator=(const GeomTriangle& copy) {
 void GeomTriangle::Shape(const VecDouble& xi, VecDouble& phi, MatrixDouble& dphi) {
     if(xi.size() != Dimension || phi.size() != nCorners || dphi.rows() != Dimension || dphi.cols() != nCorners) DebugStop();
     // Linear order
-    phi[0] =  1.-xi[0]-xi[1]; //xi[0]=x e xi[1]=y
-    phi[1] =  xi[0];
-    phi[2] =  xi[1];
+
+    phi.resize(3);
+    dphi.resize(2, 3);
+    
+    double qsi = xi[0];
+    double eta = xi[1];
+
+    phi[0] =  1. - qsi - eta; //xi[0]=x e xi[1]=y
+    phi[1] =  qsi;
+    phi[2] =  eta;
     
     //(linha,coluna)
     dphi(0,0) = -1.; //dphi[0]/dx
@@ -41,16 +48,15 @@ void GeomTriangle::Shape(const VecDouble& xi, VecDouble& phi, MatrixDouble& dphi
    
     //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
     if(xi.size() != Dimension || phi.size() != nCorners || dphi.rows() != Dimension || dphi.cols() != nCorners) DebugStop();
-    DebugStop();
 }
 
 void GeomTriangle::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x) {
     if(xi.size() != Dimension) DebugStop();
-    if(x.size() != NodeCo.rows()) DebugStop();
+    if(x.size() < NodeCo.rows()) DebugStop();
     if(NodeCo.cols() != nCorners) DebugStop();
     
-    VecDouble phi(3);
-    MatrixDouble dphi (2,3);
+    VecDouble phi(nCorners);
+    MatrixDouble dphi (Dimension,nCorners);
     Shape(xi,phi,dphi);
     x.setZero();
 
@@ -59,9 +65,21 @@ void GeomTriangle::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x) {
 
     for (int i=0; i < nrow; i++){
         for (int j=0; j < ncol; j++){
-            x[i] += NodeCo(i,j) * phi[j];
+            x[i] += phi[j]*NodeCo(i,j);
             }
+    
+    //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
+    // DebugStop();
     }
+
+    // int nrow = NodeCo.rows();
+    // int ncol = NodeCo.cols();
+
+    // for (int i=0; i < nrow; i++){
+    //     for (int j=0; j < ncol; j++){
+    //         x[i] += NodeCo(i,j) * phi[j];
+    //     }
+    // }
     
     //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
 }
@@ -71,23 +89,30 @@ void GeomTriangle::GradX(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x
     if(x.size() != NodeCo.rows()) DebugStop();
     if(NodeCo.cols() != nCorners) DebugStop();
 
-    VecDouble phi(3);
-    MatrixDouble dphi (2,3);
-    Shape(xi,phi,dphi);
+    int nrow = NodeCo.rows();
+    int ncol = NodeCo.cols();
+
+    gradx.resize(nrow, 2);
+    gradx.setZero();
+    // x.resize(2);
     x.setZero();
+    
+    VecDouble phi(nCorners);
+    MatrixDouble dphi(Dimension, nCorners);
+    Shape(xi, phi, dphi);
 
-    int npoints = NodeCo.cols(); // pontos
-    int ndirections = NodeCo.rows(); // direções x, y e z
+    // int npoints = NodeCo.cols(); // pontos
+    // int ndirections = NodeCo.rows(); // direções x, y e z
 
-    gradx.resize(ndirections,npoints);
-    gradx.fill(0.);
-
-    for(int i=0; i<ndirections; i++){
-        for(int j=0; j<npoints; j++){
-            x[i] += NodeCo(i,j) * phi[j]; // coordenada dos nós * função em cada nó
-            gradx(i,0) += NodeCo(i,j) * dphi(0,i); //phi relaciona-se com o nº de ptos = j
-            gradx(i,1) += NodeCo(i,j) * dphi(1,i);
-        }  
+    for (int i = 0; i < nCorners; i++) {
+        for (int j = 0; j < Dimension; j++) {
+            x[j] += NodeCo(j,i) * phi[i];
+            gradx(j, 0) += NodeCo(j, i) * dphi(0, i);
+            gradx(j, 1) += NodeCo(j, i) * dphi(1, i);
+           
+            // std::cout << "NodeCo: \n" << NodeCo << std::endl;
+            // std::cout << "GradX: \n" << gradx << std::endl;
+            }
     
     //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
     }

@@ -41,7 +41,7 @@ void ShapeTriangle::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, M
     dphi(0,2) =  0.; //dphi[2]/dx
     dphi(1,2) =  1.; //dphi[2]/dy
 
-    if (orders[nf-1] > 2) {
+    if (orders[nf-1] == 2) {
       
         phi[3] = 4.*phi[0]*phi[1];
         dphi(0,3) = 4.*dphi(0,0)*phi[1]+4.*dphi(0,1)*phi[0]; //dphi[3]/dx
@@ -59,8 +59,9 @@ void ShapeTriangle::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, M
         DebugStop(); */
     }
     
-    
-    
+    // std::cout << "phi = " << phi << std::endl;
+    // std::cout << "dphi = " << dphi << std::endl;
+
     /*std::cout << "Please implement me\n";
     DebugStop();*/
     

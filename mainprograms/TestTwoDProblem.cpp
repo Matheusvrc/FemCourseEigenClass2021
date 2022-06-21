@@ -29,7 +29,7 @@ int main ()
 {
     GeoMesh gmesh;
     ReadGmsh read;
-    std::string filename("quads.msh");
+    std::string filename("../twoD32.msh");
 #ifdef MACOSX
     filename = "../"+filename;
 #endif
@@ -42,18 +42,33 @@ int main ()
     perm(1,1) = 1.;
     perm(2,2) = 1.;
     Poisson *mat1 = new Poisson(1,perm);
-    mat1->SetDimension(2);
+    mat1->SetDimension(1);
 
     auto force = [](const VecDouble &x, VecDouble &res)
     {
-        res[0] = 2.*(1.-x[0])*x[0]+2.*(1-x[1])*x[1];
+        // res[0] = 2.*(1.-x[0])*x[0]+2.*(1-x[1])*x[1];
+        res[0] = x[0]*x[0] - x[1]*x[1];
     };
+
+    auto exact = [](const VecDouble &x, VecDouble &val, MatrixDouble &deriv)
+    {
+        // val[0] = (1.-x[0])*x[0]*(1-x[1])*x[1];
+        // deriv(0,0) = (1.-2.*x[0])*(1-x[1])*x[1];
+        // deriv(1,0) = (1-2.*x[1])*(1-x[0])*x[0];
+
+        val[0] = x[0]*x[0] - x[1]*x[1];
+        deriv(0,0) = 2.*x[0];
+        deriv(1,0) = -2.*x[1];
+    };
+
     mat1->SetForceFunction(force);
     MatrixDouble proj(1,1),val1(1,1),val2(1,1);
     proj.setZero();
     val1.setZero();
     val2.setZero();
     L2Projection *bc_linha = new L2Projection(0,2,proj,val1,val2);
+    bc_linha->SetExactSolution(exact); //adicionei
+    mat1->SetExactSolution(exact); //adicionei
     L2Projection *bc_point = new L2Projection(0,3,proj,val1,val2);
     std::vector<MathStatement *> mathvec = {0,mat1,bc_point,bc_linha};
     cmesh.SetMathVec(mathvec);
@@ -64,12 +79,7 @@ int main ()
         Analysis locAnalysis(&cmesh);
     locAnalysis.RunSimulation();
     PostProcessTemplate<Poisson> postprocess;
-    auto exact = [](const VecDouble &x, VecDouble &val, MatrixDouble &deriv)
-    {
-        val[0] = (1.-x[0])*x[0]*(1-x[1])*x[1];
-        deriv(0,0) = (1.-2.*x[0])*(1-x[1])*x[1];
-        deriv(1,0) = (1-2.*x[1])*(1-x[0])*x[0];
-    };
+    
 
 //    if (!strcmp("Sol", name.c_str())) return ESol;
 //    if (!strcmp("DSol", name.c_str())) return EDSol;

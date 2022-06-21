@@ -27,6 +27,9 @@ void GeomTetrahedron::Shape(const VecDouble &xi, VecDouble &phi, MatrixDouble &d
     double eta = xi[1];
     double zeta = xi[2];
 
+    // std::cout << "qsi(x): \n" << qsi << std::endl;
+    // std::cout << "eta(y): \n" << eta << std::endl;
+
     phi[0] = 1.0 - qsi - eta - zeta;
     phi[1] = qsi;
     phi[2] = eta;
@@ -53,10 +56,9 @@ void GeomTetrahedron::X(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble &x)
     if(xi.size() != Dimension) DebugStop();
     if(x.size() != NodeCo.rows()) DebugStop();
     if(NodeCo.cols() != nCorners) DebugStop();
+   
     VecDouble phi(nCorners);
     MatrixDouble dphi(Dimension, nCorners);
-    
-    
     Shape(xi, phi, dphi);
     int space = NodeCo.rows();
 
@@ -89,6 +91,9 @@ void GeomTetrahedron::GradX(const VecDouble &xi, MatrixDouble &NodeCo, VecDouble
             gradx(j, 0) += NodeCo(j, i) * dphi(0, i);
             gradx(j, 1) += NodeCo(j, i) * dphi(1, i);
             gradx(j, 2) += NodeCo(j, i) * dphi(2, i);
+
+            std::cout << "NodeCo: \n" << NodeCo << std::endl;
+            std::cout << "GradX: \n" << gradx << std::endl;
         }
     }
 }

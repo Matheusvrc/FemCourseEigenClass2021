@@ -29,6 +29,9 @@ void Shape1d::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, MatrixD
         phi[1] = (1 + xi[0]) / 2.;
         dphi(0,0) = -0.5;
         dphi(0,1) = 0.5;
+
+        std::cout << "phi: \n" << phi << std::endl;
+        std::cout << "dphi: \n" << dphi << std::endl;
     
     if (orders[2] > 1) {
        /* VecDouble phiCheby(nshape);
@@ -45,6 +48,8 @@ void Shape1d::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, MatrixD
         if (nshape==3){
             phi[2]=4*phi[0]*phi[1];
             dphi(0,2)=4*dphi(0,0)*phi[1]+4*phi[0]*dphi(0,1);
+            std::cout << "phi: \n" << phi << std::endl;
+            std::cout << "dphi: \n" << dphi << std::endl;
         }
         
         }

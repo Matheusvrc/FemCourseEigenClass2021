@@ -60,7 +60,7 @@ int main(){
 
     gmesh->BuildConnectivity();
 
-    gmesh->Print(std::cout);
+    // gmesh->Print(std::cout);
 
     VTKGeoMesh printer;
     printer.PrintGMeshVTK(gmesh,"geoMesh.vtk");
@@ -70,8 +70,8 @@ int main(){
     CompMesh cmesh(gmesh);
 
     //Estabelece um tipo de material
-    MatrixDouble perm(1,1);
-    perm(0,0)=1.;
+    MatrixDouble perm(3,3);
+    perm.setIdentity();
     Poisson *mat = new Poisson(matid,perm);
 
     //Inserir o material de condição de contorno
@@ -91,10 +91,9 @@ int main(){
     cmesh.SetDefaultOrder(2);
     
     //Insere o material na malha computacional e cria o espaço de aproximação
-    // cmesh.SetMathStatement(matid,mat);
     cmesh.AutoBuild();
 
-    //Análise.
+    //Análise
     Analysis an(&cmesh);
     an.RunSimulation();
 
@@ -102,24 +101,22 @@ int main(){
     PostProcessTemplate<Poisson> postprocess;
     auto exact = [](const VecDouble &x, VecDouble &val, MatrixDouble &deriv)
     {
-    val[0] = x[0]-sinh(x[0])/sinh(1.);
-    deriv(0,0) = 1.-cosh(x[0])*cosh(1.);
+        val[0] = x[0]-sinh(x[0])/sinh(1.);
+        deriv(0,0) = 1.-cosh(x[0])/sinh(1.);
     };
     postprocess.AppendVariable("Sol");
     postprocess.AppendVariable("DSol");
 
     postprocess.SetExact(exact);
-    mat->SetExactSolution(exact);
-    printer.PrintSolVTK(&cmesh,postprocess,"result.vtk");
+    mat->SetExactSolution(exact);    
 
-    
-    // //Pos processamento;
-    // PostProcessTemplate<Poisson> postprocess;
-    // postprocess.SetExact(exact);
-    
-    // //Analise do erro;
-    // VecDouble errvec;
-    // errvec = an.PostProcessError(std::cout, postprocess);
+    // //Novo, mudar permeabilidade.
+    VecDouble errvec;
+    mat->SetExactSolution(exact);
+    mat->SetDimension(1);
+    an.PostProcessSolution("result.vtk",postprocess);
+    errvec = an.PostProcessError(std::cout, postprocess);
+
 
     return 0;
 }
