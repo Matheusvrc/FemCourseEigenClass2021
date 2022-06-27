@@ -187,7 +187,7 @@ void CompElement::CalcStiff(MatrixDouble &ek, MatrixDouble &ef) const {
     double weight = 0.;
 
     IntRule *intrule = this->GetIntRule();
-    intrule->SetOrder(2);
+    // intrule->SetOrder(4);
     int intrulepoints = intrule->NPoints();
 
     for(int int_ind = 0; int_ind < intrulepoints; ++int_ind){ 

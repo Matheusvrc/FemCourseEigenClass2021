@@ -4,11 +4,11 @@ SetFactory("OpenCASCADE");
 Point(1) = {0, 0, 0, 1.0};
 //+
 Extrude {1, 0, 0} {
-  Point{1}; Layers{4}; Recombine;
+  Point{1}; Layers{1}; Recombine;
 }
 //+
 Extrude {0, 1, 0} {
-  Curve{1}; Layers{4}; Recombine;
+  Curve{1}; Layers{1}; Recombine;
 }
 //+
 Physical Surface("Concreto", 1) = {1};

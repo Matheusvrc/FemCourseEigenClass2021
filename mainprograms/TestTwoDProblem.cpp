@@ -29,7 +29,7 @@ int main ()
 {
     GeoMesh gmesh;
     ReadGmsh read;
-    std::string filename("../twoD32.msh");
+    std::string filename("../twoD64.msh");
 #ifdef MACOSX
     filename = "../"+filename;
 #endif
@@ -46,19 +46,17 @@ int main ()
 
     auto force = [](const VecDouble &x, VecDouble &res)
     {
-        // res[0] = 2.*(1.-x[0])*x[0]+2.*(1-x[1])*x[1];
-        res[0] = x[0]*x[0] - x[1]*x[1];
+        // res[0] = 2.(1.-x[0])*x[0]+2.(1-x[1])*x[1]; // 1ª ordem
+        res[0] = ((x[0] * x[0] * (-x[1] * x[1] + x[1] + 2) + x[0] * (x[1] * x[1] - x[1] - 2) + 2 * (x[1] - 1) * x[1])* sin(x[1]) + 2 * (x[0] - 1) * x[0] * (2 * x[1] - 1) * cos(x[1]))*(-1); //2ª ordem
+        
+    //    res[0] = 0;
     };
 
     auto exact = [](const VecDouble &x, VecDouble &val, MatrixDouble &deriv)
     {
-        // val[0] = (1.-x[0])*x[0]*(1-x[1])*x[1];
-        // deriv(0,0) = (1.-2.*x[0])*(1-x[1])*x[1];
-        // deriv(1,0) = (1-2.*x[1])*(1-x[0])*x[0];
-
-        val[0] = x[0]*x[0] - x[1]*x[1];
-        deriv(0,0) = 2.*x[0];
-        deriv(1,0) = -2.*x[1];
+        val[0] = (1. - x[0]) * x[0] * (1 - x[1]) * x[1] * sin(x[1]); 
+        deriv(0,0) = sin(x[1]) * ( (x[1])*(1-x[1]) - 2.*x[0]*x[1]*(1.-x[1]) );
+        deriv(1,0) = x[0] * sin(x[1]) * (1-2*x[1]) + x[0]*x[1]*cos(x[1]) * (1-x[1]) - x[0]*x[0]*sin(x[1]) * (1-2*x[1]) - x[0]*x[0]*x[1]*cos(x[1]) * (1-x[1]); 
     };
 
     mat1->SetForceFunction(force);
@@ -69,14 +67,25 @@ int main ()
     L2Projection *bc_linha = new L2Projection(0,2,proj,val1,val2);
     bc_linha->SetExactSolution(exact); //adicionei
     mat1->SetExactSolution(exact); //adicionei
-    L2Projection *bc_point = new L2Projection(0,3,proj,val1,val2);
-    std::vector<MathStatement *> mathvec = {0,mat1,bc_point,bc_linha};
+    L2Projection *bc_point = new L2Projection(0,2,proj,val1,val2); // (0-Dirichlet ou 1-Neumann, ID)
+    
+    // val2(0,0) = 800.;
+    // L2Projection *hot = new L2Projection(0,2,proj,val1,val2);
+    
+    // val2(0,0) = 20.;
+    // L2Projection *cold = new L2Projection(0,3,proj,val1,val2);
+    
+    // val2(0,0) = 0.;
+    // L2Projection *adiab = new L2Projection(1,4,proj,val1,val2);
+    
+    std::vector<MathStatement *> mathvec = {0,mat1, bc_linha, bc_point};
+    // std::vector<MathStatement *> mathvec = {0,mat1,hot,cold,adiab};
     cmesh.SetMathVec(mathvec);
-    cmesh.SetDefaultOrder(1);
+    cmesh.SetDefaultOrder(2);
     cmesh.AutoBuild();
     cmesh.Resequence();
 
-        Analysis locAnalysis(&cmesh);
+    Analysis locAnalysis(&cmesh);
     locAnalysis.RunSimulation();
     PostProcessTemplate<Poisson> postprocess;
     
@@ -95,7 +104,7 @@ int main ()
     postprocess.AppendVariable("DSolExact");
     postprocess.SetExact(exact);
     mat1->SetExactSolution(exact);
-    locAnalysis.PostProcessSolution("quads.vtk", postprocess);
+    locAnalysis.PostProcessSolution("bloco.vtk", postprocess);
 
     VecDouble errvec;
     errvec = locAnalysis.PostProcessError(std::cout, postprocess);

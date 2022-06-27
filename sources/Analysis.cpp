@@ -71,8 +71,9 @@ void Analysis::RunSimulation() {
     GlobalSystem = K;
     RightHandSide = F;
 
-    // std::cout << "Computing solution..." << std::endl;
-    // std::cout << "Global vector..." << F << std::endl;
+    std::cout << "Computing solution..." << std::endl;
+    std::cout << "Global vector..." << F << std::endl;
+    std::cout << "Global matrix..." << K << std::endl;
     
     SparseLU<SparseMat, COLAMDOrdering<int> >   solver;
     // Compute the ordering permutation vector from the structural pattern of A
@@ -83,7 +84,7 @@ void Analysis::RunSimulation() {
     Solution = solver.solve(F); 
 
     std::cout << "Solution computed!" << std::endl;
-    // std::cout << "Solution =\n" << Solution << std::endl;
+    std::cout << "Solution =\n" << Solution << std::endl;
     
     int solsize = Solution.rows();
     VecDouble sol(solsize);

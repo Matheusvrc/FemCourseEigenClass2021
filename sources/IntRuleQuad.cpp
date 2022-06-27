@@ -5,121 +5,43 @@
  */
 
 ///\cond
-#include <iostream>
-#include <stdio.h>
+#include <iostream> 
 ///\endcond
 #include "IntRule1d.h"
 #include "IntRuleQuad.h"
 
-
 IntRuleQuad::IntRuleQuad(){
 }
 
-IntRuleQuad::IntRuleQuad(int order) : IntRule(order){
-    SetOrder(order); //adicionei
-    
-    /*
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
-    */
+IntRuleQuad::IntRuleQuad(int order) {
+    SetOrder(order);
 }
 
 void IntRuleQuad::SetOrder(int order) {
-    
     fOrder = order;
-    if (order < 0 || order > MaxOrder()) DebugStop(); 
-    
-    int npoints=((2*(order))-1)*((2*(order))-1);
-    VecDouble coordAux(npoints);
-     
-    switch (order){
-        case 0:
-        case 1:
 
-        fPoints.resize(1, Dimension());
-        fWeights.resize(1);
-        
-        fPoints(0, 0) = 0.;
-        fPoints(0, 1) = 0.;
-        
-        fWeights[0] = 4.;
-        break;
-
-    case 2:
-    case 3:
-        fPoints.resize(4, Dimension());
-        fWeights.resize(4);
-        
-        fPoints(0,0) = -1./std::sqrt(3.);
-        fPoints(0,1) = -1./std::sqrt(3.);
-        fWeights[0] = 1.;
-
-        fPoints(1,0) = 1./std::sqrt(3.);
-        fPoints(1,1) = -1./std::sqrt(3.);
-        fWeights[1] = 1.;
-        
-        fPoints(2,0) = -1./std::sqrt(3.);
-        fPoints(2,1) = 1./std::sqrt(3.);
-        fWeights[2] = 1.;
-        
-        fPoints(3,0) = 1./std::sqrt(3.);
-        fPoints(3,1) = 1./std::sqrt(3.);
-        fWeights[3] = 1.;
-
-        break;
-
-    case 4:
-    case 5:
-
-        fPoints.resize(9, Dimension());
-        fWeights.resize(9);
-        
-        fPoints(0,0) = -(std::sqrt(3./5.));
-        fPoints(0,1) = -(std::sqrt(3./5.));
-        fWeights[0] = 25./81.;
-
-        fPoints(1,0) = 0.;
-        fPoints(1,1) = -(std::sqrt(3./5.));
-        fWeights[1] = 40./81.;
-        
-        fPoints(2,0) = (std::sqrt(3./5.));
-        fPoints(2,1) = -(std::sqrt(3./5.));
-        fWeights[2] = 25./81.;
-        
-        fPoints(3,0) = -(std::sqrt(3./5.));
-        fPoints(3,1) = 0.;
-        fWeights[3] = 40./81.;
-
-        fPoints(4,0) = 0.;
-        fPoints(4,1) = 0.;
-        fWeights[4] = 64./81.;
-
-        fPoints(5,0) = (std::sqrt(3./5.));
-        fPoints(5,1) = 0.;
-        fWeights[5] = 40./81.;
-
-        fPoints(6,0) = -(std::sqrt(3./5.));
-        fPoints(6,1) = (std::sqrt(3./5.));
-        fWeights[6] = 25./81.;
-
-        fPoints(7,0) = 0.;
-        fPoints(7,1) = (std::sqrt(3./5.));
-        fWeights[7] = 40./81.;
-
-        fPoints(8,0) = (std::sqrt(3./5.));
-        fPoints(8,1) = (std::sqrt(3./5.));
-        fWeights[8] = 25./81.;
-
-        break;
-
-    default:
+    if (order < 0 || order > MaxOrder()) {
         DebugStop();
     }
 
-    /*
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
-    */
+    int nPoints = 2*order-1;
+    if (order == 0) {
+        nPoints = 1;
+    }
+    fPoints.resize(nPoints*nPoints,2);
+    fWeights.resize(nPoints);//is resized in GaulegQuad
+    
+    VecDouble coordAux(nPoints);
+    gaulegQuad(-1,1,coordAux,fWeights);
+
+    for (int i = 0; i < nPoints; i++)
+    {
+        for (int j = 0; j < nPoints; j++)
+        {
+            fPoints(i*nPoints+j,0) = coordAux[i];
+            fPoints(j+i*nPoints,1) = coordAux[j+nPoints];
+        }
+    }
 }
 
 void IntRuleQuad::gaulegQuad(const double x1, const double x2, VecDouble &co, VecDouble &w) {

@@ -97,8 +97,10 @@ void Poisson::ContributeError(IntPointData &data, VecDouble &u_exact, MatrixDoub
     for (int i = 0; i < this->NState(); i++) {
         diff = (u[i] - u_exact[i]); //L2
         errors[0] += diff*diff;
+        // std::cout << "U =" << u << std::endl;
+        // std::cout << "u_exact =" << u_exact << std::endl;
     }
-
+        // std::cout << "x =" << data.x << std::endl; 
     errors[1] = 0.;
     int dim = this->Dimension();
     int nstate = this->NState();
@@ -156,6 +158,7 @@ void Poisson::Contribute(IntPointData &data, double weight, MatrixDouble &EK, Ma
         // EK += (dphi.transpose() * dphi + phi * phi.transpose()) * weight;
         EK += (dphi.transpose() * dphi) * weight;
         EF += res * phi * weight;
+    // std::cout << "x: " << data.x << std::endl;
     // std::cout << "phi: " << phi << std::endl;
     // std::cout << "dphi: " << dphi << std::endl;
     // std::cout << "EK: " << EK << std::endl;
