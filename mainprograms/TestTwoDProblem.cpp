@@ -42,7 +42,7 @@ int main ()
     perm(1,1) = 1.;
     perm(2,2) = 1.;
     Poisson *mat1 = new Poisson(1,perm);
-    mat1->SetDimension(1);
+    mat1->SetDimension(2);
 
     auto force = [](const VecDouble &x, VecDouble &res)
     {
@@ -81,7 +81,7 @@ int main ()
     std::vector<MathStatement *> mathvec = {0,mat1, bc_linha, bc_point};
     // std::vector<MathStatement *> mathvec = {0,mat1,hot,cold,adiab};
     cmesh.SetMathVec(mathvec);
-    cmesh.SetDefaultOrder(2);
+    cmesh.SetDefaultOrder(1);
     cmesh.AutoBuild();
     cmesh.Resequence();
 
@@ -104,7 +104,7 @@ int main ()
     postprocess.AppendVariable("DSolExact");
     postprocess.SetExact(exact);
     mat1->SetExactSolution(exact);
-    locAnalysis.PostProcessSolution("bloco.vtk", postprocess);
+    locAnalysis.PostProcessSolution("8x8linear.vtk", postprocess);
 
     VecDouble errvec;
     errvec = locAnalysis.PostProcessError(std::cout, postprocess);
